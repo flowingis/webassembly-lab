@@ -1,4 +1,5 @@
 const myUrl = 'calc.wasm';
+let doubler, halfer;
 
 const importObject = {
     env: {
@@ -14,11 +15,21 @@ function fetchAndInstantiate(url, opts) {
     return WebAssembly.instantiateStreaming(fetch(url), opts)
     .then(results => {
         let exports = results.instance.exports;
-        const doubler = exports._doubler;
-        const halfer = exports._halfer;
-        console.log("il doppio di 3: ", doubler(3))
-        console.log("la metà di 10: ", halfer(10))
+        doubler = exports._doubler;
+        halfer = exports._halfer;
     });
 }
 
 fetchAndInstantiate(myUrl, importObject);
+
+function calcDouble() {
+    const num = document.getElementById("num").value;
+    const el = document.getElementById("result");
+    el.innerHTML= doubler(num);
+}
+
+function calcHalf() {
+    const num = document.getElementById("num").value;
+    const el = document.getElementById("result");
+    el.innerHTML= halfer(num);
+}
